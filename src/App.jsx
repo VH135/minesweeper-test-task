@@ -74,4 +74,11 @@ const Minesweeper = () => {
 
     return newBoard;
   }, [rows, cols, mines]);
+
+  const resetGame = useCallback(() => {
+    setBoard(initializeBoard());
+    setGameStatus('playing');
+    setFlagsPlaced(0);
+    setFirstClick(true);
+  }, [initializeBoard]);
 }
