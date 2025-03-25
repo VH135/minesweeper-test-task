@@ -224,6 +224,49 @@ const Minesweeper = () => {
         </button>
       </div>
 
+      <div className="game-info">
+
+        <div>Mines: {mines - flagsPlaced}</div>
+
+        <button onClick={resetGame} className="reset-button">
+          {gameStatus === 'playing' ? '😊' : gameStatus === 'won' ? '😎' : '😵'}
+        </button>
+
+        <div>Status: {gameStatus}</div>
+      </div>
+
+      <div className="board"
+        style={{ maxWidth: `${cols * parseInt(cellSize) + 4}px` }}
+      >
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className="row">
+            {row.map((cell, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`cell ${cell.revealed ? 'revealed' : ''} ${cell.flagged ? 'flagged' : ''}`}
+                onClick={() => revealCell(rowIndex, colIndex)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  toggleFlag(rowIndex, colIndex);
+                }}
+                style={{
+                  width: cellSize,
+                  height: cellSize,
+                  fontSize: boardSize === 'large' ? '12px' : '16px',
+                  color: cell.revealed && !cell.hasMine ? getNumberColor(cell.adjacentMines) : 'inherit',
+                  backgroundColor: cell.revealed
+                    ? cell.hasMine
+                      ? '#ff0000'
+                      : '#e0e0e0'
+                    : '#c0c0c0',
+                }}
+              >
+                {renderCellContent(cell)}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
