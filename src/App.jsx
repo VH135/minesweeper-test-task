@@ -149,5 +149,53 @@ const Minesweeper = () => {
     // обновляет счётчик проставленных флагов
     setFlagsPlaced(newBoard[row][col].flagged ? flagsPlaced + 1 : flagsPlaced - 1);
   };
+
+  // проверка победы игрока
+  const checkWinCondition = (board) => {
+    let unrevealedSafeCells = 0;
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        if (!board[i][j].revealed && !board[i][j].hasMine) {
+          unrevealedSafeCells++;
+        }
+      }
+    }
+
+    if (unrevealedSafeCells === 0) {
+      setGameStatus('won');
+    }
+  };
+
+  const getNumberColor = (count) => {
+    const colors = [
+      'transparent', // 0
+      'blue',        // 1
+      'green',       // 2
+      'red',         // 3
+      'darkblue',    // 4
+      'brown',       // 5
+      'teal',        // 6
+      'black',       // 7
+      'gray',        // 8
+    ];
+    return colors[count];
+  };
+
+  const renderCellContent = (cell) => {
+    if (!cell.revealed) {
+      return cell.flagged ? '🚩' : '';
+    }
+    if (cell.hasMine) {
+      return '💣';
+    }
+    return cell.adjacentMines > 0 ? cell.adjacentMines : '';
+  };
+
+  const handleSizeChange = (size) => {
+    setBoardSize(size);
+  };
+
+  const cellSize = boardSize === 'large' ? '20px' : boardSize === 'medium' ? '25px' : '30px';
 }
 export default Minesweeper;
