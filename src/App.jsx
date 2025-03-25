@@ -197,5 +197,34 @@ const Minesweeper = () => {
   };
 
   const cellSize = boardSize === 'large' ? '20px' : boardSize === 'medium' ? '25px' : '30px';
+
+
+  return (
+    <div className="minesweeper-container">
+      <h1>Minesweeper</h1>
+
+      <div className="size-selector">
+        <button
+          className={boardSize === 'small' ? 'active' : ''}
+          onClick={() => handleSizeChange('small')}
+        >
+          Small (8×8)
+        </button>
+        <button
+          className={boardSize === 'medium' ? 'active' : ''}
+          onClick={() => handleSizeChange('medium')}
+        >
+          Medium (16×16)
+        </button>
+        <button
+          className={boardSize === 'large' ? 'active' : ''}
+          onClick={() => handleSizeChange('large')}
+        >
+          Large (32×16)
+        </button>
+      </div>
+
+    </div>
+  )
 }
 export default Minesweeper;
