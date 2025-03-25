@@ -1,3 +1,84 @@
 body {
   background-color: grey;
 }
+
+.minesweeper-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.size-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.size-selector button {
+  padding: 8px 12px;
+  cursor: pointer;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  font-size: 20px;
+}
+
+.size-selector button.active {
+  background-color: #333;
+  color: white;
+}
+
+.game-info {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.reset-button {
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 15px;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #333;
+  background-color: #999;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #999;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+}
+
+.cell:not(.revealed):hover {
+  background-color: #aaa;
+}
+
+.revealed {
+  background-color: #e0e0e0;
+}

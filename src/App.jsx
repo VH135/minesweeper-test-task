@@ -201,7 +201,7 @@ const Minesweeper = () => {
 
   return (
     <div className="minesweeper-container">
-      <h1>Minesweeper</h1>
+      <h1>Minesweeper React</h1>
 
       <div className="size-selector">
         <button
