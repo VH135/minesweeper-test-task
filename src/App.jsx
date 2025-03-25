@@ -124,5 +124,30 @@ const Minesweeper = () => {
 
 
   }
+
+  // раскрывает все мины в случае проигрыша
+  const revealAllMines = (board) => {
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        if (board[i][j].hasMine) {
+          board[i][j].revealed = true;
+        }
+      }
+    }
+  };
+
+  // переключение флага на клетке
+  const toggleFlag = (row, col) => {
+    if (gameStatus !== 'playing' || board[row][col].revealed) {
+      return;
+    }
+
+    const newBoard = [...board];
+    newBoard[row][col].flagged = !newBoard[row][col].flagged;
+    setBoard(newBoard);
+
+    // обновляет счётчик проставленных флагов
+    setFlagsPlaced(newBoard[row][col].flagged ? flagsPlaced + 1 : flagsPlaced - 1);
+  };
 }
 export default Minesweeper;
