@@ -104,6 +104,25 @@ const Minesweeper = () => {
 
     revealCellOnBoard([...board], row, col);
   };
-}
 
+  // вспомогательная функция для раскрытия клеток (и возможных соседних)
+  const revealCellOnBoard = (board, row, col) => {
+    if (row < 0 || row >= rows || col < 0 || col >= cols || board[row][col].revealed) {
+      return;
+    }
+
+    board[row][col].revealed = true;
+    board[row][col].flagged = false; // удаляет флаг, если он тут был
+
+    if (board[row][col].hasMine) {
+      // раскрывает все мины, когда игра закончена
+      revealAllMines(board);
+      setGameStatus('lost');
+      setBoard(board);
+      return;
+    }
+
+
+  }
+}
 export default Minesweeper;
