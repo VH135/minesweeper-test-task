@@ -81,4 +81,29 @@ const Minesweeper = () => {
     setFlagsPlaced(0);
     setFirstClick(true);
   }, [initializeBoard]);
+
+  // инициализация игры при смене размера доски или на первом рендере
+  useEffect(() => {
+    resetGame();
+  }, [resetGame, boardSize]);
+
+  // раскрытие клетки
+  const revealCell = (row, col) => {
+    if (gameStatus !== 'playing' || board[row][col].revealed || board[row][col].flagged) {
+      return;
+    }
+
+    // расстановка мин при первом клике (мины быть не должно в этой клетке)
+    if (firstClick) {
+      const newBoard = placeMines(board, row, col);
+      setBoard(newBoard);
+      setFirstClick(false);
+      revealCellOnBoard(newBoard, row, col);
+      return;
+    }
+
+    revealCellOnBoard([...board], row, col);
+  };
 }
+
+export default Minesweeper;
