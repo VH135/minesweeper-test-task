@@ -1,9 +1,5 @@
-//import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
 import React, { useState, useEffect, useCallback } from 'react';
+import './App.css'
 
 const BOARD_SIZES = {
   small: { rows: 8, cols: 8, mines: 10 },
@@ -18,4 +14,22 @@ const Minesweeper = () => {
   const [flagsPlaced, setFlagsPlaced] = useState(0);
   const [firstClick, setFirstClick] = useState(true);
 
+  const { rows, cols, mines } = BOARD_SIZES[boardSize];
+
+  const initializeBoard = useCallback(() => {
+    const newBoard = [];
+    for (let i = 0; i < rows; i++) {
+      const row = [];
+      for (let j = 0; j < cols; j++) {
+        row.push({
+          revealed: false,
+          hasMine: false,
+          flagged: false,
+          adjacentMines: 0,
+        });
+      }
+      newBoard.push(row);
+    }
+    return newBoard;
+  }, [rows, cols]);
 }
