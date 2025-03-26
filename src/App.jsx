@@ -122,7 +122,18 @@ const Minesweeper = () => {
       return;
     }
 
+    // Если клетка пустая (рядом нет мин), раскрывает соседние клетки
+    if (board[row][col].adjacentMines === 0) {
+      for (let di = -1; di <= 1; di++) {
+        for (let dj = -1; dj <= 1; dj++) {
+          if (di === 0 && dj === 0) continue;
+          revealCellOnBoard(board, row + di, col + dj);
+        }
+      }
+    }
 
+    setBoard([...board]);
+    checkWinCondition(board);
   }
 
   // раскрывает все мины в случае проигрыша
