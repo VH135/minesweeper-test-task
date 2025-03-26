@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css'
+import './App.css';
 
 const BOARD_SIZES = {
   small: { rows: 8, cols: 8, mines: 10 },
@@ -15,11 +15,12 @@ const Minesweeper = () => {
   const [firstClick, setFirstClick] = useState(true);
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
-  // получение текущих размеров игрового поля
+  // Get current board dimensions
   const { rows, cols, mines } = BOARD_SIZES[boardSize];
 
-  // игровой таймер
+  // Timer effect
   useEffect(() => {
     let interval = null;
     if (timerActive) {
@@ -32,6 +33,7 @@ const Minesweeper = () => {
     return () => clearInterval(interval);
   }, [timerActive, time]);
 
+  // Initialize the board
   const initializeBoard = useCallback(() => {
     const newBoard = [];
     for (let i = 0; i < rows; i++) {
@@ -49,7 +51,7 @@ const Minesweeper = () => {
     return newBoard;
   }, [rows, cols]);
 
-  // случайное расположение мин, первый клик всегда безопасный
+  // Place mines randomly, ensuring the first click is safe
   const placeMines = useCallback((board, firstRow, firstCol) => {
     let minesPlaced = 0;
     const newBoard = JSON.parse(JSON.stringify(board));
@@ -58,20 +60,19 @@ const Minesweeper = () => {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * cols);
 
-      // мины нет на месте первого клика или где уже есть мина
+      // Don't place a mine on the first click position or where a mine already exists
       if ((row !== firstRow || col !== firstCol) && !newBoard[row][col].hasMine) {
         newBoard[row][col].hasMine = true;
         minesPlaced++;
       }
     }
 
-    // подсчёт количества мин по соседству для каждой клетки
+    // Calculate adjacent mines for each cell
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (!newBoard[i][j].hasMine) {
           let count = 0;
-
-          // проверка всех 8 соседних клеток
+          // Check all 8 surrounding cells
           for (let di = -1; di <= 1; di++) {
             for (let dj = -1; dj <= 1; dj++) {
               if (di === 0 && dj === 0) continue;
@@ -90,6 +91,7 @@ const Minesweeper = () => {
     return newBoard;
   }, [rows, cols, mines]);
 
+  // Reset the game
   const resetGame = useCallback(() => {
     setBoard(initializeBoard());
     setGameStatus('playing');
@@ -99,18 +101,18 @@ const Minesweeper = () => {
     setTimerActive(false);
   }, [initializeBoard]);
 
-  // инициализация игры при смене размера доски или на первом рендере
+  // Initialize the game when board size changes or on first render
   useEffect(() => {
     resetGame();
   }, [resetGame, boardSize]);
 
-  // раскрытие клетки
+  // Reveal a cell
   const revealCell = (row, col) => {
     if (gameStatus !== 'playing' || board[row][col].revealed || board[row][col].flagged) {
       return;
     }
 
-    // запусе таймера при первом клике
+    // Start timer on first click
     if (firstClick) {
       setTimerActive(true);
       const newBoard = placeMines(board, row, col);
@@ -124,17 +126,17 @@ const Minesweeper = () => {
     revealCellOnBoard([...board], row, col);
   };
 
-  // вспомогательная функция для раскрытия клеток (и возможных соседних)
+  // Helper function to reveal a cell (and potentially adjacent cells)
   const revealCellOnBoard = (board, row, col) => {
     if (row < 0 || row >= rows || col < 0 || col >= cols || board[row][col].revealed) {
       return;
     }
 
     board[row][col].revealed = true;
-    board[row][col].flagged = false; // удаляет флаг, если он тут был
+    board[row][col].flagged = false; // Remove flag if it was there
 
     if (board[row][col].hasMine) {
-      // раскрывает все мины, когда игра закончена
+      // Game over - reveal all mines
       revealAllMines(board);
       setGameStatus('lost');
       setBoard(board);
@@ -142,7 +144,7 @@ const Minesweeper = () => {
       return;
     }
 
-    // Если клетка пустая (рядом нет мин), раскрывает соседние клетки
+    // If it's an empty cell (no adjacent mines), reveal adjacent cells recursively
     if (board[row][col].adjacentMines === 0) {
       for (let di = -1; di <= 1; di++) {
         for (let dj = -1; dj <= 1; dj++) {
@@ -154,9 +156,9 @@ const Minesweeper = () => {
 
     setBoard([...board]);
     checkWinCondition(board);
-  }
+  };
 
-  // раскрывает все мины в случае проигрыша
+  // Reveal all mines when game is lost
   const revealAllMines = (board) => {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
@@ -167,7 +169,7 @@ const Minesweeper = () => {
     }
   };
 
-  // переключение флага на клетке
+  // Toggle flag on a cell
   const toggleFlag = (row, col) => {
     if (gameStatus !== 'playing' || board[row][col].revealed) {
       return;
@@ -177,11 +179,11 @@ const Minesweeper = () => {
     newBoard[row][col].flagged = !newBoard[row][col].flagged;
     setBoard(newBoard);
 
-    // обновляет счётчик проставленных флагов
+    // Update flags placed count
     setFlagsPlaced(newBoard[row][col].flagged ? flagsPlaced + 1 : flagsPlaced - 1);
   };
 
-  // проверка победы игрока
+  // Check if the player has won
   const checkWinCondition = (board) => {
     let unrevealedSafeCells = 0;
 
@@ -195,9 +197,11 @@ const Minesweeper = () => {
 
     if (unrevealedSafeCells === 0) {
       setGameStatus('won');
+      setTimerActive(false);
     }
   };
 
+  // Get cell color based on adjacent mines count
   const getNumberColor = (count) => {
     const colors = [
       'transparent', // 0
@@ -208,11 +212,12 @@ const Minesweeper = () => {
       'brown',       // 5
       'teal',        // 6
       'black',       // 7
-      'white',       // 8
+      'gray',        // 8
     ];
     return colors[count];
   };
 
+  // Render cell content
   const renderCellContent = (cell) => {
     if (!cell.revealed) {
       return cell.flagged ? '🚩' : '';
@@ -223,58 +228,87 @@ const Minesweeper = () => {
     return cell.adjacentMines > 0 ? cell.adjacentMines : '';
   };
 
+  // Handle board size change
   const handleSizeChange = (size) => {
     setBoardSize(size);
+    setShowSettings(false);
   };
 
+  // Format time as MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Calculate cell size based on board dimensions
   const cellSize = boardSize === 'large' ? '20px' : boardSize === 'medium' ? '25px' : '30px';
 
+  // Settings Screen
+  const renderSettings = () => (
+    <div className="settings-screen">
+      <h2>Game Settings</h2>
 
-  return (
-    <div className="minesweeper-container">
-      <h1>Minesweeper React</h1>
+      <div className="size-options">
+        <h3>Board Size:</h3>
+        <div className="size-buttons">
+          <button
+            className={boardSize === 'small' ? 'active' : ''}
+            onClick={() => handleSizeChange('small')}
+          >
+            Small (8×8)
+          </button>
+          <button
+            className={boardSize === 'medium' ? 'active' : ''}
+            onClick={() => handleSizeChange('medium')}
+          >
+            Medium (16×16)
+          </button>
+          <button
+            className={boardSize === 'large' ? 'active' : ''}
+            onClick={() => handleSizeChange('large')}
+          >
+            Large (32×16)
+          </button>
+        </div>
+      </div>
 
-      <div className="size-selector">
-        <button
-          className={boardSize === 'small' ? 'active' : ''}
-          onClick={() => handleSizeChange('small')}
-        >
-          Small (8×8)
+      <div className="settings-buttons">
+        <button onClick={() => setShowSettings(false)} className="settings-button">
+          Back to Game
         </button>
-        <button
-          className={boardSize === 'medium' ? 'active' : ''}
-          onClick={() => handleSizeChange('medium')}
-        >
-          Medium (16×16)
-        </button>
-        <button
-          className={boardSize === 'large' ? 'active' : ''}
-          onClick={() => handleSizeChange('large')}
-        >
-          Large (32×16)
-        </button>
+      </div>
+    </div>
+  );
+
+  // Game Screen
+  const renderGame = () => (
+    <>
+      <div className="game-header">
+        <h1>Minesweeper</h1>
+        <div className="header-buttons">
+          <button onClick={resetGame} className="header-button" title="Reset">
+            🔄
+          </button>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="header-button"
+            title="Settings"
+          >
+            ⚙️
+          </button>
+        </div>
       </div>
 
       <div className="game-info">
-
         <div>Mines: {mines - flagsPlaced}</div>
-
-        <button onClick={resetGame} className="reset-button">
+        <div className="face-button">
           {gameStatus === 'playing' ? '😊' : gameStatus === 'won' ? '😎' : '😵'}
-        </button>
-
+        </div>
         <div>Time: {formatTime(time)}</div>
       </div>
 
-      <div className="board"
-        style={{ maxWidth: `${cols * parseInt(cellSize) + 4}px` }}
-      >
+      <div className="board" style={{ maxWidth: `${cols * parseInt(cellSize) + 4}px` }}>
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="row">
             {row.map((cell, colIndex) => (
@@ -304,7 +338,23 @@ const Minesweeper = () => {
           </div>
         ))}
       </div>
+
+      <div className="status-info">
+        <div>Status: {gameStatus}</div>
+      </div>
+
+      <div className="instructions">
+        <p>Left-click to reveal a cell</p>
+        <p>Right-click to place/remove a flag</p>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="minesweeper-container">
+      {showSettings ? renderSettings() : renderGame()}
     </div>
-  )
-}
+  );
+};
+
 export default Minesweeper;
