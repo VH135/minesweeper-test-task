@@ -13,9 +13,24 @@ const Minesweeper = () => {
   const [gameStatus, setGameStatus] = useState('playing');
   const [flagsPlaced, setFlagsPlaced] = useState(0);
   const [firstClick, setFirstClick] = useState(true);
+  const [time, setTime] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
 
   // получение текущих размеров игрового поля
   const { rows, cols, mines } = BOARD_SIZES[boardSize];
+
+  // игровой таймер
+  useEffect(() => {
+    let interval = null;
+    if (timerActive) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+    } else if (!timerActive && time !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, time]);
 
   const initializeBoard = useCallback(() => {
     const newBoard = [];
@@ -80,6 +95,8 @@ const Minesweeper = () => {
     setGameStatus('playing');
     setFlagsPlaced(0);
     setFirstClick(true);
+    setTime(0);
+    setTimerActive(false);
   }, [initializeBoard]);
 
   // инициализация игры при смене размера доски или на первом рендере
@@ -93,11 +110,13 @@ const Minesweeper = () => {
       return;
     }
 
-    // расстановка мин при первом клике (мины быть не должно в этой клетке)
+    // запусе таймера при первом клике
     if (firstClick) {
+      setTimerActive(true);
       const newBoard = placeMines(board, row, col);
       setBoard(newBoard);
       setFirstClick(false);
+      // Now reveal the cell on the new board
       revealCellOnBoard(newBoard, row, col);
       return;
     }
@@ -119,6 +138,7 @@ const Minesweeper = () => {
       revealAllMines(board);
       setGameStatus('lost');
       setBoard(board);
+      setTimerActive(false);
       return;
     }
 
@@ -188,7 +208,7 @@ const Minesweeper = () => {
       'brown',       // 5
       'teal',        // 6
       'black',       // 7
-      'gray',        // 8
+      'white',       // 8
     ];
     return colors[count];
   };
@@ -205,6 +225,12 @@ const Minesweeper = () => {
 
   const handleSizeChange = (size) => {
     setBoardSize(size);
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const cellSize = boardSize === 'large' ? '20px' : boardSize === 'medium' ? '25px' : '30px';
@@ -243,7 +269,7 @@ const Minesweeper = () => {
           {gameStatus === 'playing' ? '😊' : gameStatus === 'won' ? '😎' : '😵'}
         </button>
 
-        <div>Status: {gameStatus}</div>
+        <div>Time: {formatTime(time)}</div>
       </div>
 
       <div className="board"
