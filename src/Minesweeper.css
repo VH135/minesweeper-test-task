@@ -1,0 +1,64 @@
+/* Add these new styles to your existing CSS */
+
+.highscores-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.back-button {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.score-table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.score-table h2 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.no-scores {
+  font-size: 18px;
+  color: #666;
+  margin-top: 20px;
+}
+
+/* Update header buttons to include high scores button */
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
