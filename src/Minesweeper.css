@@ -1,4 +1,157 @@
-/* Add these new styles to your existing CSS */
+body {
+  background-color: #777;
+}
+
+.minesweeper-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Game Header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.header-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Settings Screen */
+.settings-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.size-options {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.size-options h3 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.size-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.size-buttons button {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.size-buttons button.active {
+  background-color: #333;
+  color: white;
+}
+
+.settings-buttons {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.settings-button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.settings-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Game Screen */
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.face-button {
+  font-size: 24px;
+  padding: 0 15px;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #333;
+  background-color: #999;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #999;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+}
+
+.cell:not(.revealed):hover {
+  background-color: #aaa;
+}
+
+.revealed {
+  background-color: #e0e0e0;
+}
+
+.status-info {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.instructions {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
 
 .highscores-container {
   display: flex;

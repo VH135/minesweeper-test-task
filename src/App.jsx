@@ -13,13 +13,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MinesweeperGame from './Minesweeper.jsx';
 import HighScores from './HighScores.jsx';
-
+//import './styles.css'
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MinesweeperGame />} />
-        <Route path="./highscores" element={<HighScores />} />
+        <Route path="/highscores" element={<HighScores />} />
       </Routes>
     </Router>
   );

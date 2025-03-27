@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Minesweeper.css';
+import './minesweeper.css';
+
 
 const BOARD_SIZES = {
   small: { rows: 8, cols: 8, mines: 10 },
