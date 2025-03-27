@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './minesweeper.css';
+import './Minesweeper.css';
 
 const HighScores = () => {
   const navigate = useNavigate();

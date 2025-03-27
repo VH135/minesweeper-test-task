@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './minesweeper.css';
+import './Minesweeper.css';
 
 
 const BOARD_SIZES = {
@@ -20,10 +20,10 @@ const Minesweeper = () => {
   const [timerActive, setTimerActive] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  // Get current board dimensions
+  // получение текущих размеров игрового поля
   const { rows, cols, mines } = BOARD_SIZES[boardSize];
 
-  // Timer effect
+  // игровой таймер
   useEffect(() => {
     let interval = null;
     if (timerActive) {
@@ -36,14 +36,13 @@ const Minesweeper = () => {
     return () => clearInterval(interval);
   }, [timerActive, time]);
 
-  // Save high score when game is won
+  // сохранение результата, если игра выиграна
   useEffect(() => {
     if (gameStatus === 'won') {
       saveHighScore(time, boardSize);
     }
   }, [gameStatus, time, boardSize]);
 
-  // Initialize the board
   const initializeBoard = useCallback(() => {
     const newBoard = [];
     for (let i = 0; i < rows; i++) {
@@ -61,7 +60,7 @@ const Minesweeper = () => {
     return newBoard;
   }, [rows, cols]);
 
-  // Place mines randomly, ensuring the first click is safe
+  // случайное расположение мин, первый клик всегда безопасный
   const placeMines = useCallback((board, firstRow, firstCol) => {
     let minesPlaced = 0;
     const newBoard = JSON.parse(JSON.stringify(board));
@@ -70,19 +69,20 @@ const Minesweeper = () => {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * cols);
 
-      // Don't place a mine on the first click position or where a mine already exists
+      // мины нет на месте первого клика или где уже есть мина
       if ((row !== firstRow || col !== firstCol) && !newBoard[row][col].hasMine) {
         newBoard[row][col].hasMine = true;
         minesPlaced++;
       }
     }
 
-    // Calculate adjacent mines for each cell
+    // подсчёт количества мин по соседству для каждой клетки
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (!newBoard[i][j].hasMine) {
           let count = 0;
-          // Check all 8 surrounding cells
+
+          // проверка всех 8 соседних клеток
           for (let di = -1; di <= 1; di++) {
             for (let dj = -1; dj <= 1; dj++) {
               if (di === 0 && dj === 0) continue;
@@ -101,7 +101,6 @@ const Minesweeper = () => {
     return newBoard;
   }, [rows, cols, mines]);
 
-  // Reset the game
   const resetGame = useCallback(() => {
     setBoard(initializeBoard());
     setGameStatus('playing');
@@ -111,23 +110,21 @@ const Minesweeper = () => {
     setTimerActive(false);
   }, [initializeBoard]);
 
-  // Initialize the game when board size changes or on first render
+  // инициализация игры при смене размера доски или на первом рендере
   useEffect(() => {
     resetGame();
   }, [resetGame, boardSize]);
 
-  // Save high score to localStorage
+  // сохранение результата игры в localStorage
   const saveHighScore = (time, size) => {
     const highScores = JSON.parse(localStorage.getItem('minesweeperHighScores') || '{}');
     const sizeScores = highScores[size] || [];
 
-    // Add new score
     const newScore = {
       time,
       date: new Date().toISOString()
     };
 
-    // Update scores and keep only top 10
     const updatedScores = [...sizeScores, newScore]
       .sort((a, b) => a.time - b.time)
       .slice(0, 10);
@@ -136,13 +133,13 @@ const Minesweeper = () => {
     localStorage.setItem('minesweeperHighScores', JSON.stringify(highScores));
   };
 
-  // Reveal a cell
+  // раскрытие клетки
   const revealCell = (row, col) => {
     if (gameStatus !== 'playing' || board[row][col].revealed || board[row][col].flagged) {
       return;
     }
 
-    // Start timer on first click
+    // запусе таймера при первом клике
     if (firstClick) {
       setTimerActive(true);
       const newBoard = placeMines(board, row, col);
@@ -156,17 +153,17 @@ const Minesweeper = () => {
     revealCellOnBoard([...board], row, col);
   };
 
-  // Helper function to reveal a cell (and potentially adjacent cells)
+  // вспомогательная функция для раскрытия клеток (и возможных соседних)
   const revealCellOnBoard = (board, row, col) => {
     if (row < 0 || row >= rows || col < 0 || col >= cols || board[row][col].revealed) {
       return;
     }
 
     board[row][col].revealed = true;
-    board[row][col].flagged = false; // Remove flag if it was there
+    board[row][col].flagged = false; // удаляет флаг, если он тут был
 
     if (board[row][col].hasMine) {
-      // Game over - reveal all mines
+      // раскрывает все мины, когда игра закончена
       revealAllMines(board);
       setGameStatus('lost');
       setBoard(board);
@@ -174,7 +171,7 @@ const Minesweeper = () => {
       return;
     }
 
-    // If it's an empty cell (no adjacent mines), reveal adjacent cells recursively
+    // Если клетка пустая (рядом нет мин), раскрывает соседние клетки
     if (board[row][col].adjacentMines === 0) {
       for (let di = -1; di <= 1; di++) {
         for (let dj = -1; dj <= 1; dj++) {
@@ -188,7 +185,7 @@ const Minesweeper = () => {
     checkWinCondition(board);
   };
 
-  // Reveal all mines when game is lost
+  // раскрывает все мины в случае проигрыша
   const revealAllMines = (board) => {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
@@ -199,7 +196,7 @@ const Minesweeper = () => {
     }
   };
 
-  // Toggle flag on a cell
+  // переключение флага на клетке
   const toggleFlag = (row, col) => {
     if (gameStatus !== 'playing' || board[row][col].revealed) {
       return;
@@ -209,11 +206,11 @@ const Minesweeper = () => {
     newBoard[row][col].flagged = !newBoard[row][col].flagged;
     setBoard(newBoard);
 
-    // Update flags placed count
+    // обновляет счётчик проставленных флагов
     setFlagsPlaced(newBoard[row][col].flagged ? flagsPlaced + 1 : flagsPlaced - 1);
   };
 
-  // Check if the player has won
+  // проверка победы игрока
   const checkWinCondition = (board) => {
     let unrevealedSafeCells = 0;
 
@@ -231,7 +228,6 @@ const Minesweeper = () => {
     }
   };
 
-  // Get cell color based on adjacent mines count
   const getNumberColor = (count) => {
     const colors = [
       'transparent', // 0
@@ -242,12 +238,11 @@ const Minesweeper = () => {
       'brown',       // 5
       'teal',        // 6
       'black',       // 7
-      'gray',        // 8
+      'white',       // 8
     ];
     return colors[count];
   };
 
-  // Render cell content
   const renderCellContent = (cell) => {
     if (!cell.revealed) {
       return cell.flagged ? '🚩' : '';
@@ -258,29 +253,24 @@ const Minesweeper = () => {
     return cell.adjacentMines > 0 ? cell.adjacentMines : '';
   };
 
-  // Handle board size change
   const handleSizeChange = (size) => {
     setBoardSize(size);
     setShowSettings(false);
   };
 
-  // Format time as MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
 
-  // Calculate cell size based on board dimensions
   const cellSize = boardSize === 'large' ? '20px' : boardSize === 'medium' ? '25px' : '30px';
 
-  // Settings Screen
   const renderSettings = () => (
     <div className="settings-screen">
       <h2>Game Settings</h2>
@@ -317,11 +307,10 @@ const Minesweeper = () => {
     </div>
   );
 
-  // Game Screen
   const renderGame = () => (
     <>
       <div className="game-header">
-        <h1>Minesweeper</h1>
+        <h1>Minesweeper React</h1>
         <div className="header-buttons">
           <button onClick={resetGame} className="header-button" title="Reset">
             🔄
@@ -349,6 +338,10 @@ const Minesweeper = () => {
           {gameStatus === 'playing' ? '😊' : gameStatus === 'won' ? '😎' : '😵'}
         </div>
         <div>Time: {formatTime(time)}</div>
+      </div>
+
+      <div className="status-info">
+        <div>Status: {gameStatus}</div>
       </div>
 
       <div className="board" style={{ maxWidth: `${cols * parseInt(cellSize) + 4}px` }}>
@@ -380,10 +373,6 @@ const Minesweeper = () => {
             ))}
           </div>
         ))}
-      </div>
-
-      <div className="status-info">
-        <div>Status: {gameStatus}</div>
       </div>
     </>
   );

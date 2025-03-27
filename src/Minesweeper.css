@@ -1,5 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+  font-family: "Winky Sans", sans-serif;
+  font-weight: 500;
+}
+
 body {
-  background-color: #777;
+  background: radial-gradient(circle,
+      #60a039 0%,
+      #49762d 71%,
+      #324e21 100%,
+      #1d2915 100%,
+      #000000 100%,
+      #424F02);
+  color: #f2e8cf
 }
 
 .minesweeper-container {
@@ -7,7 +21,7 @@ body {
   flex-direction: column;
   align-items: center;
   font-family: Arial, sans-serif;
-  max-width: 100%;
+  max-width: 80%;
   margin: 0 auto;
   padding: 20px;
 }
@@ -16,7 +30,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 50%;
   margin-bottom: 10px;
 }
 
@@ -37,7 +51,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 80%;
   max-width: 400px;
 }
 
@@ -49,6 +63,7 @@ body {
 .size-options h3 {
   margin-bottom: 10px;
   text-align: center;
+  font-size: 26px;
 }
 
 .size-buttons {
@@ -60,7 +75,7 @@ body {
 
 .size-buttons button {
   padding: 12px;
-  font-size: 16px;
+  font-size: 22px;
   border: 1px solid #333;
   border-radius: 4px;
   background-color: #f0f0f0;
@@ -75,14 +90,14 @@ body {
 .settings-buttons {
   display: flex;
   gap: 10px;
-  width: 100%;
+  width: 70%;
   margin-top: 20px;
 }
 
 .settings-button {
   flex: 1;
   padding: 12px;
-  font-size: 16px;
+  font-size: 22px;
   border: 1px solid #333;
   border-radius: 4px;
   background-color: #f0f0f0;
@@ -96,9 +111,9 @@ body {
 .game-info {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 50%;
   margin-bottom: 15px;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -139,7 +154,8 @@ body {
 
 .status-info {
   margin-top: 10px;
-  font-size: 16px;
+  margin-bottom: 25px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -155,7 +171,7 @@ body {
 .back-button {
   padding: 10px 20px;
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 22px;
   border: 1px solid #333;
   border-radius: 4px;
   background-color: #f0f0f0;
@@ -183,11 +199,13 @@ td {
   padding: 10px;
   text-align: center;
   border: 1px solid #ddd;
+  font-size: 30px;
 }
 
 th {
   background-color: #f2f2f2;
   font-weight: bold;
+  color: #386641;
 }
 
 tr:nth-child(even) {
@@ -200,7 +218,6 @@ tr:nth-child(even) {
   margin-top: 20px;
 }
 
-/* Update header buttons to include high scores button */
 .header-buttons {
   display: flex;
   gap: 10px;
