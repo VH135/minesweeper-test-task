@@ -4,7 +4,7 @@ Link : https://minesweeper-test-task-dky8.vercel.app/
 
 <a href="https://minesweeper-test-task-dky8.vercel.app/">
   <img
-    src="https://raw.githubusercontent.com/elangosundar/awesome-README-templates/master/awesome-github-profile.png"
+    src="https://github.com/VH135/minesweeper-test-task/blob/main/screenshot.jpg"
     alt="project screenshot"
     >
 </a>
