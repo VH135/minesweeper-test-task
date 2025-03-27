@@ -385,11 +385,6 @@ const Minesweeper = () => {
       <div className="status-info">
         <div>Status: {gameStatus}</div>
       </div>
-
-      <div className="instructions">
-        <p>Left-click to reveal a cell</p>
-        <p>Right-click to place/remove a flag</p>
-      </div>
     </>
   );
 
